@@ -16,7 +16,7 @@ import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.ColorHelper;
-import net.minecraft.util.math.Matrix4f;
+import org.joml.Matrix4f;
 
 /**
  * Renders a video player in a traditional fullscreen interface.
@@ -104,7 +104,7 @@ public class VideoScreen extends Screen {
         super.render(matrices, mouseX, mouseY, delta);
         renderBackground(matrices);
 
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderColor(1, 1, 1, 1);
         RenderSystem.setShaderTexture(0, player.getTexture());
 
@@ -125,7 +125,7 @@ public class VideoScreen extends Screen {
     }
     
     protected void drawQuad(Matrix4f matrix, SimpleQuad quad) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         BufferBuilder buffer = Tessellator.getInstance().getBuffer();
         buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
 
@@ -134,7 +134,7 @@ public class VideoScreen extends Screen {
         buffer.vertex(matrix, quad.x1(), quad.y0(), 0).texture(quad.u1(), quad.v0()).next();
         buffer.vertex(matrix, quad.x0(), quad.y0(), 0).texture(quad.u0(), quad.v0()).next();
 
-        BufferRenderer.drawWithShader(buffer.end());
+        BufferRenderer.drawWithGlobalProgram(buffer.end());
     }
 
     /**
